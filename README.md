@@ -19,12 +19,16 @@ Node
 const FBJWTClient = require('@ministryofjustice/fb-jwt-client-node')
 
 // initialise client
-const jwtClient = new FBJWTClient(serviceToken, [errorClass])
+const jwtClient = new FBJWTClient(serviceToken, serviceUrl, [errorClass])
 ```
 
 ### `serviceToken`
 
 Constructor will throw an error if no service token is passed
+
+### `serviceUrl`
+
+Constructor will throw an error if no service url is passed
 
 ### `errorClass`
 
@@ -35,23 +39,23 @@ By default, uses FB
 ``` javascript
 // extend base class
 class FBMyClient extends FBJWTClient {
-  constructor (serviceToken, myVar) {
+  constructor (serviceToken, serviceUrl, myVar) {
     super(serviceToken)
     // do something with additional constructor argument
     this.myVar = myVar
   }
 }
 
-const myClient = new FBMyClient('service token', 'my var')
+const myClient = new FBMyClient('service token', 'http://myservice', 'my var')
 ```
 
 ``` javascript
 // extend base class with custom error
 class FBAnotherClient extends FBJWTClient {
-  constructor (serviceToken) {
+  constructor (serviceToken, serviceUrl) {
     // create custom error class
     class FBAnotherClientError extends FBJWTClient.prototype.ErrorClass {}
-    super(serviceToken, FBAnotherClientError)
+    super(serviceToken, serviceUrl, FBAnotherClientError)
     super(serviceToken)
   }
 }
@@ -63,9 +67,9 @@ class FBAnotherClient extends FBJWTClient {
 
   Generate JWT access token
 
-- getEndpointUrl
+- createEndpointUrl
 
-  Create user-specific endpoint
+  Return user-specific endpoint
 
 - sendGet
 
