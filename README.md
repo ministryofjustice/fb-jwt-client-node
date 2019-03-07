@@ -19,8 +19,12 @@ Node
 const {FBJWTClient} = require('@ministryofjustice/fb-jwt-client-node')
 
 // initialise client
-const jwtClient = new FBJWTClient(serviceToken, serviceSlug, microserviceUrl, [errorClass])
+const jwtClient = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl, [errorClass])
 ```
+
+#### `serviceSecret`
+
+Constructor will throw an error if no service secret is passed
 
 #### `serviceToken`
 
@@ -43,23 +47,23 @@ By default, uses FBJWTClientError
 ``` javascript
 // extend base class
 class FBMyClient extends FBJWTClient {
-  constructor (serviceToken, serviceSlug, microserviceUrl, myVar) {
-    super(serviceToken, serviceSlug, microserviceUrl)
+  constructor (serviceSecret, serviceToken, serviceSlug, microserviceUrl, myVar) {
+    super(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
     // do something with additional constructor argument
     this.myVar = myVar
   }
 }
 
-const myClient = new FBMyClient('service token', 'myservice', 'http://myservice', 'my var')
+const myClient = new FBMyClient('service_secret', 'service_token', 'myservice', 'http://myservice', 'my var')
 ```
 
 ``` javascript
 // extend base class with custom error
 class FBAnotherClient extends FBJWTClient {
-  constructor (serviceToken, serviceSlug, microserviceUrl) {
+  constructor (serviceSecret, serviceToken, serviceSlug, microserviceUrl) {
     // create custom error class
     class FBAnotherClientError extends FBJWTClient.prototype.ErrorClass {}
-    super(serviceToken, serviceSlug, microserviceUrl, FBAnotherClientError)
+    super(serviceSecret, serviceToken, serviceSlug, microserviceUrl, FBAnotherClientError)
   }
 }
 ```
@@ -89,6 +93,14 @@ class FBAnotherClient extends FBJWTClient {
 - decrypt
 
   Decrypt data
+  
+- encryptUserIdAndToken
+
+  Encrypt user ID and token using service secret
+
+- decryptUserIdAndToken
+
+  Decrypt user ID and token using service secret
 
 - handleRequestError
 
@@ -101,26 +113,6 @@ class FBAnotherClient extends FBJWTClient {
 - throwRequestError
 
   Convenience function for throwing errors
-
-### Loading and initialising  client with secret and associated methods
-
-``` javascript
-// load client class
-const {FBJWTClientWithSecret} = require('@ministryofjustice/fb-jwt-client-node')
-
-// initialise client
-const jwtClientWithSecret = new FBJWTClientWithSecret(serviceSecret, serviceToken, serviceSlug, microserviceUrl, [errorClass])
-```
-
-#### Methods
-
-- encryptUserIdAndToken
-
-  Encrypt user ID and token using service secret
-
-- decryptUserIdAndToken
-
-  Decrypt user ID and token using service secret
 
 ## Further details
 
