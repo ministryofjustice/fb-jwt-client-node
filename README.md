@@ -16,7 +16,7 @@ Node
 
 ``` javascript
 // load client class
-const {FBJWTClient} = require('@ministryofjustice/fb-jwt-client-node')
+const FBJWTClient = require('@ministryofjustice/fb-jwt-client-node')
 
 // initialise client
 const jwtClient = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl, [errorClass])
