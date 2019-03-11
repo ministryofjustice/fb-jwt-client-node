@@ -1,6 +1,6 @@
 {
   "name": "@ministryofjustice/fb-jwt-client-node",
-  "version": "0.0.10-alpha",
+  "version": "0.0.17",
   "description": "Form Builder JSON Web Token Client (Node)",
   "main": "lib/fb-jwt-client.js",
   "repository": {
@@ -21,15 +21,15 @@
     "multi-tape": "^1.2.1",
     "npm-run-all": "^4.1.5",
     "proxyquire": "^2.1.0",
-    "sinon": "^6.3.5",
-    "tape": "^4.9.2"
+    "sinon": "^7.2.7",
+    "tape": "^4.10.1"
   },
   "dependencies": {
-    "@ministryofjustice/fb-utils-node": "^0.1.4",
+    "@ministryofjustice/fb-utils-node": "^0.1.5",
     "aes256": "^1.0.4",
-    "jsonwebtoken": "^8.4.0",
-    "path-to-regexp": "^2.4.0",
+    "jsonwebtoken": "^8.5.0",
+    "path-to-regexp": "^3.0.0",
     "request": "^2.88.0",
-    "request-promise-native": "^1.0.5"
+    "request-promise-native": "^1.0.7"
   }
 }

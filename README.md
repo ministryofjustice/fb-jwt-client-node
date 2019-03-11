@@ -12,56 +12,63 @@ Node
 
 ## Usage
 
-### Loading and initialising
+### Loading and initialising basic client
 
 ``` javascript
 // load client class
 const FBJWTClient = require('@ministryofjustice/fb-jwt-client-node')
 
 // initialise client
-const jwtClient = new FBJWTClient(serviceToken, serviceUrl, [errorClass])
+const jwtClient = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl, [errorClass])
 ```
 
-### `serviceToken`
+#### `serviceSecret`
+
+Constructor will throw an error if no service secret is passed
+
+#### `serviceToken`
 
 Constructor will throw an error if no service token is passed
 
-### `serviceUrl`
+#### `serviceSlug`
+
+Constructor will throw an error if no service slug is passed
+
+#### `microserviceUrl`
 
 Constructor will throw an error if no service url is passed
 
-### `errorClass`
+#### `errorClass`
 
-By default, uses FB
+By default, uses FBJWTClientError
 
-## Extending
+### Extending
 
 ``` javascript
 // extend base class
 class FBMyClient extends FBJWTClient {
-  constructor (serviceToken, serviceUrl, myVar) {
-    super(serviceToken)
+  constructor (serviceSecret, serviceToken, serviceSlug, microserviceUrl, myVar) {
+    super(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
     // do something with additional constructor argument
     this.myVar = myVar
   }
 }
 
-const myClient = new FBMyClient('service token', 'http://myservice', 'my var')
+const myClient = new FBMyClient('service_secret', 'service_token', 'myservice', 'http://myservice', 'my var')
 ```
 
 ``` javascript
 // extend base class with custom error
 class FBAnotherClient extends FBJWTClient {
-  constructor (serviceToken, serviceUrl) {
+  constructor (serviceSecret, serviceToken, serviceSlug, microserviceUrl) {
     // create custom error class
     class FBAnotherClientError extends FBJWTClient.prototype.ErrorClass {}
-    super(serviceToken, serviceUrl, FBAnotherClientError)
-    super(serviceToken)
+    super(serviceSecret, serviceToken, serviceSlug, microserviceUrl, FBAnotherClientError)
   }
 }
 ```
 
-## Methods
+### Methods
 
 - generateAccessToken
 
@@ -86,6 +93,14 @@ class FBAnotherClient extends FBJWTClient {
 - decrypt
 
   Decrypt data
+  
+- encryptUserIdAndToken
+
+  Encrypt user ID and token using service secret
+
+- decryptUserIdAndToken
+
+  Decrypt user ID and token using service secret
 
 - handleRequestError
 
@@ -98,5 +113,7 @@ class FBAnotherClient extends FBJWTClient {
 - throwRequestError
 
   Convenience function for throwing errors
+
+## Further details
 
 See documentation in code for further details and `fb-user-datastore-client-node` and `fb-submitter-client-node` for examples.
