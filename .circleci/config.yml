@@ -10,7 +10,10 @@ jobs:
           name: Install
           command: npm install
       - run:
-          name: Runs ESLint and test
+          name: Lints
+          command: npm run test
+      - run:
+          name: Tests
           command: npm run test
 
 workflows:
