@@ -19,7 +19,7 @@
     "aes256": "^1.0.4",
     "got": "^9.6.0",
     "jsonwebtoken": "^8.5.1",
-    "path-to-regexp": "^3.1.0"
+    "path-to-regexp": "^4.0.2"
   },
   "devDependencies": {
     "@ministryofjustice/eslint-config-fb": "^1.1.2",
