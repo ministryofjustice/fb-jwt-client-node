@@ -34,26 +34,6 @@ const serviceToken = 'testServiceToken'
 
 const microserviceUrl = 'https://microservice'
 
-function nockGet (url, response, code = 201) {
-  const client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
-
-  nock(microserviceUrl)
-    .get(url)
-    .reply(code, response)
-
-  return client.send('get', {url})
-}
-
-function nockPost (url, response, code = 201) {
-  const client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
-
-  nock(microserviceUrl)
-    .post(url)
-    .reply(code, response)
-
-  return client.send('post', {url})
-}
-
 describe('~/fb-jwt-client-node/fb-jwt-client', () => {
   describe('Always', () => {
     it('exports the class', () => expect(FBJWTClient).to.be.a('function'))
@@ -401,7 +381,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       })
 
       it('it should call the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
-      it('it should add the x-access-token header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token']).to.eql('accessToken'))
+      it('it should add the x-access-token header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token']).to.equal('accessToken'))
       it('it should return the response’s body parsed as JSON', () => expect(returnValue).to.eql({foo: 'bar'}))
     })
 
@@ -430,7 +410,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       })
 
       it('it should call the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
-      it('it should add the x-access-token header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token']).to.eql('accessToken'))
+      it('it should add the x-access-token header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token']).to.equal('accessToken'))
       it('it should return undefined', () => expect(returnValue).to.be.undefined)
     })
   })
@@ -575,7 +555,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     })
   })
 
-  xdescribe('Retrying', () => {
+  describe('Retrying', () => {
     let client
 
     let apiMetricsEndStub
@@ -585,17 +565,16 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     let requestMetricsStartTimerStub
 
     beforeEach(async () => {
-      client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      /*
+       *  Don't use Nock or the nocked microservice URL
+       */
+      client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, 'https://retry-microservice')
 
       apiMetricsEndStub = sinon.stub()
       apiMetricsStartTimerStub = sinon.stub(client.apiMetrics, 'startTimer').returns(apiMetricsEndStub)
 
       requestMetricsEndStub = sinon.stub()
       requestMetricsStartTimerStub = sinon.stub(client.requestMetrics, 'startTimer').returns(requestMetricsEndStub)
-
-      nock(microserviceUrl)
-        .get('/server-error')
-        .reply(500)
     })
 
     afterEach(() => {
@@ -603,108 +582,123 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       requestMetricsStartTimerStub.restore()
     })
 
-    it('throws an ‘ENOERROR’', async () => {
+    it('throws an ‘ENOTFOUND’', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 2}}, {error (e) { return e }})
+        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
         expect(e.name).to.equal('FBJWTClientError')
       }
-    })
+    }).timeout(30000)
 
     it('starts the instrumentation timer with the correct args', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 2}}, {error (e) { return e }})
+        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
         expect(apiMetricsStartTimerStub.getCall(0).args[0]).to.eql({
           client_name: 'FBJWTClient',
-          base_url: microserviceUrl,
+          base_url: 'https://retry-microservice',
           url: '/server-error',
           method: 'get'
         })
       }
-    })
+    }).timeout(30000)
 
-    it('stops the instrumentation timer with the correct args', async () => {
+    it('stops the api metrics instrumentation timer with the correct args', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 2}}, {error (e) { return e }})
+        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
         expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({
-          error_name: 'HTTPError',
-          error_message: 'Response code 500 (Internal Server Error)'
+          error_name: 'RequestError',
+          error_message: 'getaddrinfo ENOTFOUND retry-microservice'
         })
       }
-    })
+    }).timeout(30000)
 
-    it('starts the instrumentation timer with the correct args', async () => {
+    it('starts the request instrumentation timer with the correct args', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 2}}, {error (e) { return e }})
+        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
         expect(requestMetricsStartTimerStub.getCall(0).args[0]).to.eql({
           client_name: 'FBJWTClient',
-          base_url: microserviceUrl,
+          base_url: 'https://retry-microservice',
           url: '/server-error',
           method: 'get'
         })
       }
-    })
+    }).timeout(30000)
 
     it('stops the instrumentation timer with the correct args', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 2}}, {error (e) { return e }})
+        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
         expect(requestMetricsEndStub.getCall(0).args[0]).to.eql({
-          status_code: 500,
-          status_message: 'Internal Server Error'
+          error_name: 'RequestError',
+          error_message: 'getaddrinfo ENOTFOUND retry-microservice'
         })
       }
-    })
+    }).timeout(30000)
 
     it('calls the api metrics start timer the expected number of times', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 2}}, {error (e) { return e }})
+        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
         expect(apiMetricsStartTimerStub.callCount).to.equal(1)
       }
-    })
+    }).timeout(30000)
 
     it('calls api metrics end the expected number of times', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 2}}, {error (e) { return e }})
+        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
         expect(apiMetricsEndStub.callCount).to.equal(1)
       }
-    })
+    }).timeout(30000)
 
     it('calls request metrics end the expected number of times', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 2}}, {error (e) { return e }})
+        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
-        expect(requestMetricsEndStub.callCount).to.equal(1)
+        expect(requestMetricsEndStub.callCount).to.equal(4)
       }
-    })
+    }).timeout(30000)
 
     it('calls the request metrics start timer the expected number of times', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 2}}, {error (e) { return e }})
+        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
-        expect(requestMetricsStartTimerStub.callCount).to.equal(1)
+        expect(requestMetricsStartTimerStub.callCount).to.equal(4)
       }
-    })
+    }).timeout(30000)
   })
 
   describe('An endpoint returns JSON', () => {
     describe('The JSON is populated', () => {
+      let client
+      beforeEach(() => {
+        client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      })
+
       describe('Getting', async () => {
-        try {
-          await nockGet('/json-body', {success: true})
-        } catch (e) {
-          it('throws an ‘ENOERROR’', () => expect(e.name).to.equal('FBJWTClientError'))
-        }
+        it('throws an ‘ENOERROR’', async () => {
+          try {
+            nock(microserviceUrl)
+              .get('/json-body')
+              .reply(201, {success: true})
+
+            await client.send('get', {url: '/json-body'})
+          } catch (e) {
+            expect(e.name).to.equal('FBJWTClientError')
+          }
+        })
       })
 
       describe('Posting', () => {
         it('returns the JSON', async () => {
-          const response = await nockPost('/json-body', {success: true})
+          nock(microserviceUrl)
+            .post('/json-body')
+            .reply(201, {success: true})
+
+          const response = await client.send('post', {url: '/json-body'})
 
           expect(response).to.eql({success: true})
         })
@@ -712,21 +706,34 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     })
 
     describe('The JSON is not populated', () => {
-      describe('Posting', () => {
-        it('returns the JSON', async () => {
-          const response = await nockPost('/empty-json-body', {})
-
-          expect(response).to.eql({})
-        })
+      let client
+      beforeEach(() => {
+        client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
       })
 
       describe('Getting', () => {
         it('throws an ‘ENOERROR’', async () => {
           try {
-            await nockGet('/empty-json-body', {})
+            nock(microserviceUrl)
+              .get('/empty-json-body')
+              .reply(201, {})
+
+            await client.send('get', {url: '/empty-json-body'})
           } catch (e) {
             expect(e.name).to.equal('FBJWTClientError')
           }
+        })
+      })
+
+      describe('Posting', () => {
+        it('returns the JSON', async () => {
+          nock(microserviceUrl)
+            .post('/empty-json-body')
+            .reply(201, {})
+
+          const response = await client.send('post', {url: '/empty-json-body'})
+
+          expect(response).to.eql({})
         })
       })
     })
@@ -734,84 +741,131 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
 
   describe('An endpoint returns a string', () => {
     describe('The string is populated', () => {
+      let client
+      beforeEach(() => {
+        client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      })
+
       describe('With mixed characters', () => {
-        describe('Posting', () => {
-          it('returns the response', async () => {
-            const response = await nockPost('/non-empty-body', ' lorem ipsum ')
-
-            expect(response).to.eql(' lorem ipsum ')
-          })
-        })
-
         describe('Getting', () => {
           it('throws an ‘ENOERROR’', async () => {
             try {
-              await nockGet('/non-empty-body', ' lorem ipsum ')
+              nock(microserviceUrl)
+                .get('/non-empty-body')
+                .reply(201, ' lorem ipsum ')
+
+              await client.send('get', {url: '/non-empty-body'})
             } catch (e) {
               expect(e.name).to.equal('FBJWTClientError')
             }
+          })
+        })
+
+        describe('Posting', () => {
+          it('returns the response', async () => {
+            nock(microserviceUrl)
+              .post('/non-empty-body')
+              .reply(201, ' lorem ipsum ')
+
+            const response = await client.send('post', {url: '/non-empty-body'})
+
+            expect(response).to.equal(' lorem ipsum ')
           })
         })
       })
 
       describe('With whitespace', () => {
-        describe('Posting', () => {
-          it('returns an empty JSON object', async () => {
-            const response = await nockPost('/spaces-body', ' ')
-
-            expect(response).to.eql({})
-          })
-        })
-
         describe('Getting', () => {
           it('throws an ‘ENOERROR’', async () => {
             try {
-              await nockGet('/spaces-body', ' ')
+              nock(microserviceUrl)
+                .get('/spaces-body')
+                .reply(201, '    ')
+
+              await client.send('get', {url: '/spaces-body'})
             } catch (e) {
               expect(e.name).to.equal('FBJWTClientError')
             }
+          })
+        })
+
+        describe('Posting', () => {
+          it('returns an empty JSON object', async () => {
+            nock(microserviceUrl)
+              .post('/spaces-body')
+              .reply(201, '    ')
+
+            const response = await client.send('post', {url: '/spaces-body'})
+
+            expect(response).to.eql({})
           })
         })
       })
     })
 
     describe('The string is not populated', () => {
-      describe('Posting', () => {
-        it('returns an empty JSON object', async () => {
-          const response = await nockPost('/empty-string-body', '')
-
-          expect(response).to.eql({})
-        })
+      let client
+      beforeEach(() => {
+        client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
       })
 
       describe('Getting', async () => {
         it('throws an ‘ENOERROR’', async () => {
           try {
-            await nockGet('/empty-string-body', '')
+            nock(microserviceUrl)
+              .get('/empty-string-body')
+              .reply(201, '')
+
+            await client.send('get', {url: '/empty-string-body'})
           } catch (e) {
             expect(e.name).to.equal('FBJWTClientError')
           }
+        })
+      })
+
+      describe('Posting', () => {
+        it('returns an empty JSON object', async () => {
+          nock(microserviceUrl)
+            .post('/empty-string-body')
+            .reply(201, '')
+
+          const response = await client.send('post', {url: '/empty-string-body'})
+
+          expect(response).to.eql({})
         })
       })
     })
   })
 
   describe('An endpoint returns undefined', () => {
-    describe('Posting', () => {
-      it('returns an empty JSON object', async () => {
-        const response = await nockPost('/undefined-body')
-
-        expect(response).to.eql({})
-      })
+    let client
+    beforeEach(() => {
+      client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
     })
 
     describe('Getting', () => {
       it('throws an ‘ENOERROR’', async () => {
         try {
-          await nockGet('/undefined-body')
+          nock(microserviceUrl)
+            .get('/undefined-body')
+            .reply(201)
+
+          await client.send('get', {url: '/undefined-body'})
         } catch (e) {
           expect(e.name).to.equal('FBJWTClientError')
         }
+      })
+    })
+
+    describe('Posting', () => {
+      it('returns an empty JSON object', async () => {
+        nock(microserviceUrl)
+          .post('/undefined-body')
+          .reply(201)
+
+        const response = await client.send('post', {url: '/undefined-body'})
+
+        expect(response).to.eql({})
       })
     })
   })
@@ -1171,13 +1225,16 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
 
     let returnValue
 
-    beforeEach(() => {
+    beforeEach(async () => {
       client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
       sendStub = sinon.stub(client, 'send').returns('mock return value')
 
       mockArgs = {}
       mockLogger = {}
 
+      /*
+       *  Don't await -- test that the return is a promise
+       */
       returnValue = client.sendGet(mockArgs, mockLogger)
     })
 
@@ -1199,13 +1256,16 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
 
     let returnValue
 
-    beforeEach(() => {
+    beforeEach(async () => {
       client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
       sendStub = sinon.stub(client, 'send').returns('mock return value')
 
       mockArgs = {}
       mockLogger = {}
 
+      /*
+       *  Don't await -- test that the return is a promise
+       */
       returnValue = client.sendPost(mockArgs, mockLogger)
     })
 
