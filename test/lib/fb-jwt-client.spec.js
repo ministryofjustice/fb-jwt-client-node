@@ -1225,7 +1225,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
 
     let returnValue
 
-    beforeEach(async () => {
+    beforeEach(() => {
       client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
       sendStub = sinon.stub(client, 'send').returns('mock return value')
 
@@ -1256,7 +1256,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
 
     let returnValue
 
-    beforeEach(async () => {
+    beforeEach(() => {
       client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
       sendStub = sinon.stub(client, 'send').returns('mock return value')
 
