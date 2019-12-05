@@ -237,7 +237,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
   describe('Creating the request options', () => {
     describe('POST requests', () => {
       describe('With data', () => {
-        it('returns an object with a `body` field', () => {
+        it('returns an object with a populated JSON object as assigned to the field `body`', () => {
           const client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
           sinon.stub(client, 'generateAccessToken').returns('testAccessToken')
 
@@ -245,14 +245,15 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
             .to.eql({
               url: 'https://microservice/foo',
               headers: {'x-access-token': 'testAccessToken'},
+              method: 'post',
               responseType: 'json',
-              body: {foo: 'bar'}
+              body: '{"foo":"bar"}'
             })
         })
       })
 
       describe('Without data', () => {
-        it('returns an object without a `body` field', () => {
+        it('returns an object with a JSON object as assigned to the field `body`', () => {
           const client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
           sinon.stub(client, 'generateAccessToken').returns('testAccessToken')
 
@@ -260,7 +261,9 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
             .to.eql({
               url: 'https://microservice/foo',
               headers: {'x-access-token': 'testAccessToken'},
-              responseType: 'json'
+              method: 'post',
+              responseType: 'json',
+              body: '{}'
             })
         })
       })
@@ -276,6 +279,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
             .to.eql({
               url: 'https://microservice/foo',
               headers: {'x-access-token': 'testAccessToken'},
+              method: 'get',
               responseType: 'json',
               searchParams: {payload: 'eyJmb28iOiJiYXIifQ=='}
             })
@@ -291,6 +295,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
             .to.eql({
               url: 'https://microservice/foo',
               headers: {'x-access-token': 'testAccessToken'},
+              method: 'get',
               responseType: 'json'
             })
         })
