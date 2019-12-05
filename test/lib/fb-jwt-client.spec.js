@@ -747,7 +747,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
         client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
       })
 
-      xdescribe('With mixed characters', () => {
+      describe('With mixed characters', () => {
         describe('Getting', () => {
           it('throws an ‘ENOERROR’', async () => {
             try {
