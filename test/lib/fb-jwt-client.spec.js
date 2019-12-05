@@ -587,8 +587,6 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       try {
         await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
-        console.log(e)
-
         expect(e.name).to.equal('FBJWTClientError')
       }
     }).timeout(30000)
@@ -611,8 +609,8 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
         await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
         expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({
-          // error_name: 'RequestError',
-          // error_message: 'getaddrinfo ENOTFOUND retry-microservice'
+          error_code: 502,
+          error_message: 'getaddrinfo ENOTFOUND retry-microservice'
         })
       }
     }).timeout(30000)
@@ -635,8 +633,8 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
         await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
         expect(requestMetricsEndStub.getCall(0).args[0]).to.eql({
-          // error_name: 'RequestError',
-          // error_message: 'getaddrinfo ENOTFOUND retry-microservice'
+          error_code: 502,
+          error_message: 'getaddrinfo ENOTFOUND retry-microservice'
         })
       }
     }).timeout(30000)
