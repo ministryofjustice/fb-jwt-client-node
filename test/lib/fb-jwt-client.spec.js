@@ -448,23 +448,23 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       requestMetricsStartTimerStub.restore()
     })
 
-    it('starts the instrumentation timer with the correct args', () => expect(apiMetricsStartTimerStub.getCall(0).args[0]).to.eql({
+    it('starts the api metrics instrumentation timer with the correct args', () => expect(apiMetricsStartTimerStub.getCall(0).args[0]).to.eql({
       client_name: 'FBJWTClient',
       base_url: microserviceUrl,
       url: '/route',
       method: 'post'
     }))
 
-    it('stops the instrumentation timer with the correct args', () => expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({status_code: 200}))
+    it('stops the api metrics instrumentation timer with the correct args', () => expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({status_code: 200, status_message: 'OK'}))
 
-    it('starts the instrumentation timer with the correct args', () => expect(requestMetricsStartTimerStub.getCall(0).args[0]).to.eql({
+    it('starts the request instrumentation timer with the correct args', () => expect(requestMetricsStartTimerStub.getCall(0).args[0]).to.eql({
       client_name: 'FBJWTClient',
       base_url: microserviceUrl,
       url: '/route',
       method: 'post'
     }))
 
-    it('stops the instrumentation timer with the correct args', () => expect(requestMetricsEndStub.getCall(0).args[0]).to.eql({status_code: 200}))
+    it('stops the request instrumentation timer with the correct args', () => expect(requestMetricsEndStub.getCall(0).args[0]).to.eql({status_code: 200, status_message: 'OK'}))
   })
 
   describe('Posting to an endpoint unsuccessfully', () => {
@@ -505,7 +505,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       }
     })
 
-    it('starts the instrumentation timer with the correct args', async () => {
+    it('starts the api metrics instrumentation timer with the correct args', async () => {
       try {
         await client.send('post', {
           url: '/not-found'
@@ -520,17 +520,17 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       }
     })
 
-    it('stops the instrumentation timer with the correct args', async () => {
+    it('stops the api metrics instrumentation timer with the correct args', async () => {
       try {
         await client.send('post', {
           url: '/not-found'
         }, {error: () => {}})
       } catch (e) {
-        expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({status_code: 404, status_message: 'Not Found'})
+        expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({error_code: 404, error_message: 'Not Found'})
       }
     })
 
-    it('starts the instrumentation timer with the correct args', async () => {
+    it('starts the request instrumentation timer with the correct args', async () => {
       try {
         await client.send('post', {
           url: '/not-found'
@@ -545,13 +545,13 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       }
     })
 
-    it('stops the instrumentation timer with the correct args', async () => {
+    it('stops the request instrumentation timer with the correct args', async () => {
       try {
         await client.send('post', {
           url: '/not-found'
         }, {error: () => {}})
       } catch (e) {
-        expect(requestMetricsEndStub.getCall(0).args[0]).to.eql({status_code: 404})
+        expect(requestMetricsEndStub.getCall(0).args[0]).to.eql({status_code: 404, status_message: 'Not Found'})
       }
     })
   })
@@ -591,7 +591,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       }
     }).timeout(30000)
 
-    it('starts the instrumentation timer with the correct args', async () => {
+    it('starts the api metrics instrumentation timer with the correct args', async () => {
       try {
         await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
@@ -628,7 +628,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       }
     }).timeout(30000)
 
-    it('stops the instrumentation timer with the correct args', async () => {
+    it('stops the request instrumentation timer with the correct args', async () => {
       try {
         await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
