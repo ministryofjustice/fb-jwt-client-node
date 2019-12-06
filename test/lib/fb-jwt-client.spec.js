@@ -237,7 +237,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
   describe('Creating the request options', () => {
     describe('POST requests', () => {
       describe('With data', () => {
-        it('returns an object with a `body` field', () => {
+        it('returns an object with a JSON object assigned to the field `body`', () => {
           const client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
           sinon.stub(client, 'generateAccessToken').returns('testAccessToken')
 
@@ -246,13 +246,13 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
               url: 'https://microservice/foo',
               headers: {'x-access-token': 'testAccessToken'},
               responseType: 'json',
-              body: {foo: 'bar'}
+              json: {foo: 'bar'}
             })
         })
       })
 
       describe('Without data', () => {
-        it('returns an object without a `body` field', () => {
+        it('returns an object without a JSON object assigned to the field `body`', () => {
           const client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
           sinon.stub(client, 'generateAccessToken').returns('testAccessToken')
 
@@ -260,7 +260,8 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
             .to.eql({
               url: 'https://microservice/foo',
               headers: {'x-access-token': 'testAccessToken'},
-              responseType: 'json'
+              responseType: 'json',
+              json: {}
             })
         })
       })
@@ -325,9 +326,9 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
         getGetStub.restore()
       })
 
-      it('it should call the correct url', () => expect(getGetStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
-      it('it should add the correct x-access-token header', () => expect(getGetStub.getCall(0).args[0].headers['x-access-token']).to.equal('testAccessToken'))
-      it('it should return the unencrypted data', () => expect(returnValue).to.eql({foo: 'bar'}))
+      it('calls the correct url', () => expect(getGetStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
+      it('adds the correct x-access-token header', () => expect(getGetStub.getCall(0).args[0].headers['x-access-token']).to.equal('testAccessToken'))
+      it('returns the unencrypted data', () => expect(returnValue).to.eql({foo: 'bar'}))
     })
 
     describe('Without a payload', () => {
@@ -347,9 +348,9 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
         getGetStub.restore()
       })
 
-      it('it should call the correct url', () => expect(getGetStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
-      it('it should add the correct x-access-token header', () => expect(getGetStub.getCall(0).args[0].headers['x-access-token']).to.equal('testAccessToken'))
-      it('it should return undefined', () => expect(returnValue).to.be.undefined)
+      it('calls the correct url', () => expect(getGetStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
+      it('adds the correct x-access-token header', () => expect(getGetStub.getCall(0).args[0].headers['x-access-token']).to.equal('testAccessToken'))
+      it('returns undefined', () => expect(returnValue).to.be.undefined)
     })
   })
 
@@ -380,9 +381,9 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
         generateAccessTokenStub.restore()
       })
 
-      it('it should call the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
-      it('it should add the x-access-token header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token']).to.equal('accessToken'))
-      it('it should return the response’s body parsed as JSON', () => expect(returnValue).to.eql({foo: 'bar'}))
+      it('calls the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
+      it('adds the x-access-token header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token']).to.equal('accessToken'))
+      it('returns JSON', () => expect(returnValue).to.eql({foo: 'bar'}))
     })
 
     describe('Without a payload', () => {
@@ -409,9 +410,9 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
         generateAccessTokenStub.restore()
       })
 
-      it('it should call the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
-      it('it should add the x-access-token header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token']).to.equal('accessToken'))
-      it('it should return undefined', () => expect(returnValue).to.be.undefined)
+      it('calls the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
+      it('adds the x-access-token header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token']).to.equal('accessToken'))
+      it('returns undefined', () => expect(returnValue).to.be.undefined)
     })
   })
 
@@ -447,23 +448,23 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       requestMetricsStartTimerStub.restore()
     })
 
-    it('starts the instrumentation timer with the correct args', () => expect(apiMetricsStartTimerStub.getCall(0).args[0]).to.eql({
+    it('starts the api metrics instrumentation timer with the correct args', () => expect(apiMetricsStartTimerStub.getCall(0).args[0]).to.eql({
       client_name: 'FBJWTClient',
       base_url: microserviceUrl,
       url: '/route',
       method: 'post'
     }))
 
-    it('stops the instrumentation timer with the correct args', () => expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({status_code: 200, status_message: 'OK'}))
+    it('stops the api metrics instrumentation timer with the correct args', () => expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({status_code: 200, status_message: 'OK'}))
 
-    it('starts the instrumentation timer with the correct args', () => expect(requestMetricsStartTimerStub.getCall(0).args[0]).to.eql({
+    it('starts the request instrumentation timer with the correct args', () => expect(requestMetricsStartTimerStub.getCall(0).args[0]).to.eql({
       client_name: 'FBJWTClient',
       base_url: microserviceUrl,
       url: '/route',
       method: 'post'
     }))
 
-    it('stops the instrumentation timer with the correct args', () => expect(requestMetricsEndStub.getCall(0).args[0]).to.eql({status_code: 200, status_message: 'OK'}))
+    it('stops the request instrumentation timer with the correct args', () => expect(requestMetricsEndStub.getCall(0).args[0]).to.eql({status_code: 200, status_message: 'OK'}))
   })
 
   describe('Posting to an endpoint unsuccessfully', () => {
@@ -504,7 +505,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       }
     })
 
-    it('starts the instrumentation timer with the correct args', async () => {
+    it('starts the api metrics instrumentation timer with the correct args', async () => {
       try {
         await client.send('post', {
           url: '/not-found'
@@ -519,17 +520,17 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       }
     })
 
-    it('stops the instrumentation timer with the correct args', async () => {
+    it('stops the api metrics instrumentation timer with the correct args', async () => {
       try {
         await client.send('post', {
           url: '/not-found'
         }, {error: () => {}})
       } catch (e) {
-        expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({error_name: 'HTTPError', error_message: 'Response code 404 (Not Found)'})
+        expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({error_code: 404, error_message: 'Not Found'})
       }
     })
 
-    it('starts the instrumentation timer with the correct args', async () => {
+    it('starts the request instrumentation timer with the correct args', async () => {
       try {
         await client.send('post', {
           url: '/not-found'
@@ -544,7 +545,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       }
     })
 
-    it('stops the instrumentation timer with the correct args', async () => {
+    it('stops the request instrumentation timer with the correct args', async () => {
       try {
         await client.send('post', {
           url: '/not-found'
@@ -590,7 +591,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       }
     }).timeout(30000)
 
-    it('starts the instrumentation timer with the correct args', async () => {
+    it('starts the api metrics instrumentation timer with the correct args', async () => {
       try {
         await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
@@ -608,7 +609,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
         await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
         expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({
-          error_name: 'RequestError',
+          error_code: 502,
           error_message: 'getaddrinfo ENOTFOUND retry-microservice'
         })
       }
@@ -627,12 +628,12 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       }
     }).timeout(30000)
 
-    it('stops the instrumentation timer with the correct args', async () => {
+    it('stops the request instrumentation timer with the correct args', async () => {
       try {
         await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
       } catch (e) {
         expect(requestMetricsEndStub.getCall(0).args[0]).to.eql({
-          error_name: 'RequestError',
+          error_code: 502,
           error_message: 'getaddrinfo ENOTFOUND retry-microservice'
         })
       }
@@ -790,7 +791,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
         })
 
         describe('Posting', () => {
-          it('returns an empty JSON object', async () => {
+          it('returns the JSON', async () => {
             nock(microserviceUrl)
               .post('/spaces-body')
               .reply(201, '    ')
@@ -858,7 +859,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     })
 
     describe('Posting', () => {
-      it('returns an empty JSON object', async () => {
+      it('returns the JSON', async () => {
         nock(microserviceUrl)
           .post('/undefined-body')
           .reply(201)
@@ -988,54 +989,27 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
   })
 
   describe('`encryptUserIdAndToken`', () => {
-    describe('With an initialization vector', () => {
-      let client
-      let encryptStub
+    let client
+    let encryptStub
 
-      let returnValue
+    let returnValue
 
-      beforeEach(() => {
-        client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
-        encryptStub = sinon.stub(client, 'encrypt').returns('mock encrypted data')
-        client.serviceSecret = 'mock service secret'
+    beforeEach(() => {
+      client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      encryptStub = sinon.stub(client, 'encrypt').returns('mock encrypted data')
+      client.serviceSecret = 'mock service secret'
 
-        returnValue = client.encryptUserIdAndToken('mock user id', 'mock user token', 'mock initialization vector')
-      })
-
-      it('calls `encrypt()`', () => {
-        expect(encryptStub)
-          .to.be.calledWith('mock service secret', {userId: 'mock user id', userToken: 'mock user token'}, 'mock initialization vector')
-      })
-
-      it('returns a string', () => {
-        expect(returnValue)
-          .to.equal('mock encrypted data')
-      })
+      returnValue = client.encryptUserIdAndToken('mock user id', 'mock user token')
     })
 
-    describe('Without an initialization vector', () => {
-      let client
-      let encryptStub
+    it('calls `encrypt()`', () => {
+      expect(encryptStub)
+        .to.be.calledWith('mock service secret', {userId: 'mock user id', userToken: 'mock user token'}, 'mock user idmock user token')
+    })
 
-      let returnValue
-
-      beforeEach(() => {
-        client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
-        encryptStub = sinon.stub(client, 'encrypt').returns('mock encrypted data')
-        client.serviceSecret = 'mock service secret'
-
-        returnValue = client.encryptUserIdAndToken('mock user id', 'mock user token')
-      })
-
-      it('calls `encrypt()`', () => {
-        expect(encryptStub)
-          .to.be.calledWith('mock service secret', {userId: 'mock user id', userToken: 'mock user token'}, 'mock user idmock user token')
-      })
-
-      it('returns a string', () => {
-        expect(returnValue)
-          .to.equal('mock encrypted data')
-      })
+    it('returns a string', () => {
+      expect(returnValue)
+        .to.equal('mock encrypted data')
     })
   })
 
@@ -1222,28 +1196,28 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
 
     let mockArgs
     let mockLogger
+    let mockReturnValue
 
     let returnValue
 
-    beforeEach(() => {
+    beforeEach(async () => {
+      mockReturnValue = {}
+
       client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
-      sendStub = sinon.stub(client, 'send').returns('mock return value')
+      sendStub = sinon.stub(client, 'send').returns(mockReturnValue)
 
       mockArgs = {}
       mockLogger = {}
 
-      /*
-       *  Don't await -- test that the return is a promise
-       */
-      returnValue = client.sendGet(mockArgs, mockLogger)
+      returnValue = await client.sendGet(mockArgs, mockLogger)
     })
 
     it('calls `send`', () => {
       expect(sendStub).to.be.calledWith('get', mockArgs, mockLogger)
     })
 
-    it('returns a `Promise`', () => {
-      expect(returnValue).to.be.a('promise')
+    it('returns a `Promise` which resolves to an object', () => {
+      expect(returnValue).to.be.an('object')
     })
   })
 
@@ -1256,25 +1230,22 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
 
     let returnValue
 
-    beforeEach(() => {
+    beforeEach(async () => {
       client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
-      sendStub = sinon.stub(client, 'send').returns('mock return value')
+      sendStub = sinon.stub(client, 'send').returns(undefined)
 
       mockArgs = {}
       mockLogger = {}
 
-      /*
-       *  Don't await -- test that the return is a promise
-       */
-      returnValue = client.sendPost(mockArgs, mockLogger)
+      returnValue = await client.sendPost(mockArgs, mockLogger)
     })
 
     it('calls `send`', () => {
       expect(sendStub).to.be.calledWith('post', mockArgs, mockLogger)
     })
 
-    it('returns a `Promise`', () => {
-      expect(returnValue).to.be.a('promise')
+    it('returns a `Promise` which resolves to undefined', () => {
+      return expect(returnValue).to.be.undefined
     })
   })
 
