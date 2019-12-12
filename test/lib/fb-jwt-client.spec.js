@@ -34,6 +34,12 @@ const serviceToken = 'testServiceToken'
 
 const microserviceUrl = 'https://microservice'
 
+const encodedPrivateKey = 'LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBM1NUQjJMZ2gwMllrdCtMcXo5bjY5MlNwV0xFdXNUR1hEMGlmWTBuRHpmbXF4MWVlCmx6MXh4cEpPTGV0ckxncW4zN2hNak5ZMC9uQUNjTWR1RUg5S1hycmFieFhYVGwxeVkyMStnbVd4NDlOZVlESW4KYmRtKzZzNUt2TGdVTk43WFZjZVA5UHVxWnlzeENWQTRUbm1MRURLZ2xTV2JVeWZ0QmVhVENKVkk2NFoxMmRNdApQYkFneFdBZmVTTGxiN0JQbHNIbS9IMEFBTCtuYmFPQ2t3dnJQSkRMVFZPek9XSE1vR2dzMnJ4akJIRC9OV05aCnNUVlFhbzRYd2hlYnVkaGx2TWlrRVczMldLZ0t1SEhXOHpkdlU4TWozM1RYK1picVhPaWtkRE54dHd2a1hGN0wKQTNZaDhMSTVHeWQ5cDZmMjdNZmxkZ1VJSFN4Y0pweTFKOEFQcXdJREFRQUJBb0lCQUU5ZjJTQVRmemlraWZ0aQp2RXRjZnlMN0EzbXRKd2c4dDI2cDcyT3czMUg0RWg4NHlOaWFHbE5ld2lialAvWW5wdmU2NitjRkg4SlBxK0NWCkJHRnhmdDBmampXZkRrZTNiTTVaUjdaQUVDaW8vay9pMEpveU5MK015ZkNRMWRmZ1FFUXV1L0gvdnJzSEdyT3cKRW5YQVZIUzg1enlCWWczbjM4QmxjVkw4V2s4R3FlMGxCUU5RSks5dSt5ckc5NEpoUTVoMTZubXlyQ0xpWkhSTAoyWS94MTdDL3BCN1VlUVFWeDZ4aVZSdVdmT1FoWlNmT2IzRHpsYldhc2owa2pTaHdWWDFQVG5sU0lxQXo5T3krClY5M013VFBtbVNOOGFiL0pGVlVBUzhtckM2elcxc0NjcFVUTFZHRVZBUFBJcWpjMmZFKzdLVGNjVDFzWkt0MWIKb2p1R2xSa0NnWUVBL2ZuK3VZcCtxSzdiQmxkUTZCSmNsNXpkR0xybXRrWFFZR096d2cvN21zd0NVdUM3UFpGYQpJV0xBSGM4QU85eDZvUFQ0SzFPNnQzYVBtMW8vUTR1S1N2NWNGK3EwaThMemVQM2JxdnowQXBXekdPVFdiMXg5CnNBRzNIOCtIT3JNS0NXVWl3bm5pUG1PMDNXUUY0dmFoWUd1WXYzSkNSNTYxanBJOFRkMkx6QmNDZ1lFQTN1ZkwKKzdqNGE2elVBOUNrak5wSnB2VkxyQk8ydUpiRHk5NXBpSzlCU3FIellQSEw3VVBWTExFaXRGWlNBWlRWRzFHMwpWbUNxMVoraXhCcTRST0t2VldyME1mSklsUlEvQXBQY3NwVXJjRTRPcnAxRkEyNjlLdXhhdnI5dmpLMCtIbWNRClEydWNRWWdUeWFXQlNZeW9laW04QWQ2UlpJRzVLQ25uTVlhNThZMENnWUVBNUp6VG5VLzlFdm5TVGJMck1QclcKUGVNRlllMWJIMWRZYW10VXM2cVBZSmVpdjlkcXM5RFN3SnFUTkVIUWhCSENrSC94bzQ2SzAvbjA2bkloNERzTApFTlpGTDRJbFltanBvRTlpSEZmMWpSNFRTS1UwSUttd3VXM1IyT0NGYVdFZjk3VUJ4T3pScWpjMTV0TFNPYXFuCk9KT2h1ekt1VnFtVjQrL2VPSGprRGFFQ2dZQUdMVFloeTRaV3RYdEtmOFdQZ1p6NDIyTTFhWFp1dHY3Rjcydk4KTmM0QlcydDdERGd5WXViTlRqcy85QVJodHRZUTQ3ckkwZlRwNW5xRUpKbG1qMEY4aEhJdjBCN2l3cVRjVld5UQpKa0lGNHFQVmd0WWV1anJUcmFqMkVDZnZKZjNLcWVCeGZkSGVudjZ0WDhDdFlSQnFFaTM3ZjBkWUdhQWYxTWxyClBlaDVJUUtCZ1FDbmN6YU8xcUx3VktyeUc4TzF5ZUhDSjQzT1h6SENwN3VnOE90aS9ScmhWZ08wSCtEdVpXUzUKSWhydHpUeU56MExyQTdibVFLTWZ4Y3k5Y29LOG9zZnVma1pZenJxM1ZFa0ViUCtjRWdLcGtlTDlaY2RSbXZ3WQozSTZkMUlOWVUwMldPSzhiRUJBNElJNGc0ak9ZcjJJUjFzb2lWZ0E2YnVya3E3QnMrUm41WFE9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo='
+
+const encodedPublicKey = 'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUEzU1RCMkxnaDAyWWt0K0xxejluNgo5MlNwV0xFdXNUR1hEMGlmWTBuRHpmbXF4MWVlbHoxeHhwSk9MZXRyTGdxbjM3aE1qTlkwL25BQ2NNZHVFSDlLClhycmFieFhYVGwxeVkyMStnbVd4NDlOZVlESW5iZG0rNnM1S3ZMZ1VOTjdYVmNlUDlQdXFaeXN4Q1ZBNFRubUwKRURLZ2xTV2JVeWZ0QmVhVENKVkk2NFoxMmRNdFBiQWd4V0FmZVNMbGI3QlBsc0htL0gwQUFMK25iYU9Da3d2cgpQSkRMVFZPek9XSE1vR2dzMnJ4akJIRC9OV05ac1RWUWFvNFh3aGVidWRobHZNaWtFVzMyV0tnS3VISFc4emR2ClU4TWozM1RYK1picVhPaWtkRE54dHd2a1hGN0xBM1loOExJNUd5ZDlwNmYyN01mbGRnVUlIU3hjSnB5MUo4QVAKcXdJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg=='
+
+const publicKey = Buffer.from(encodedPublicKey, 'base64').toString('ascii')
+
 describe('~/fb-jwt-client-node/fb-jwt-client', () => {
   describe('Always', () => {
     it('exports the class', () => expect(FBJWTClient).to.be.a('function'))
@@ -201,7 +207,6 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     })
   })
 
-  // JWT
   describe('Generating a JSON web token', () => {
     let client
     let clock
@@ -210,7 +215,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     beforeEach(() => {
       client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
       clock = sinon.useFakeTimers({now: 1483228800000})
-      accessToken = client.generateAccessToken({data: 'testData'})
+      accessToken = client.generateAccessToken({data: 'testData'}, serviceToken, 'HS256')
     })
 
     afterEach(() => {
@@ -220,7 +225,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     it('generates a JSON web token containing a checksum', () => {
       const {
         checksum
-      } = jwt.verify(accessToken, serviceToken)
+      } = jwt.verify(accessToken, serviceToken, 'RS256')
 
       expect(checksum).to.equal('b5118e71a8ed3abbc8c40d4058b0dd54b9410ffd56ef888f602ed10026c46a3a')
     })
@@ -234,32 +239,98 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     })
   })
 
+  describe('Generating a JSON web token with encoded private key', () => {
+    let client
+    let clock
+    let accessToken
+    const options = {
+      encodedPrivateKey: encodedPrivateKey
+    }
+
+    beforeEach(() => {
+      client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl, undefined, options)
+      clock = sinon.useFakeTimers({now: 1483228800000})
+      accessToken = client.generateAccessToken({data: 'testData'}, client.privateKey(), 'RS256')
+    })
+
+    afterEach(() => {
+      clock.restore()
+    })
+
+    it('generates a JSON web token containing a checksum verifiable with public key', () => {
+      const {
+        checksum
+      } = jwt.verify(accessToken, publicKey)
+
+      expect(checksum).to.equal('b5118e71a8ed3abbc8c40d4058b0dd54b9410ffd56ef888f602ed10026c46a3a')
+    })
+
+    it('generates a JSON web token containing an iat', () => {
+      const {
+        iat
+      } = jwt.verify(accessToken, publicKey)
+
+      expect(iat).to.equal(1483228800)
+    })
+  })
+
   describe('Creating the request options', () => {
+    let clock
+
+    beforeEach(() => {
+      clock = sinon.useFakeTimers({now: 1483228800000})
+    })
+
+    afterEach(() => {
+      clock.restore()
+    })
+
     describe('POST requests', () => {
       describe('With data', () => {
         it('returns an object with a JSON object assigned to the field `body`', () => {
           const client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
-          sinon.stub(client, 'generateAccessToken').returns('testAccessToken')
 
           expect(client.createRequestOptions('/foo', {}, {foo: 'bar'}))
             .to.eql({
               url: 'https://microservice/foo',
-              headers: {'x-access-token': 'testAccessToken'},
+              headers: {
+                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.Ir9FvrSHfSyqJp-KmHoCnj8Z6HbpszC3PhhmB0Dq2oI',
+                'x-access-token-v2': undefined
+              },
               responseType: 'json',
               json: {foo: 'bar'}
             })
+        })
+
+        describe('With private key available', () => {
+          it('defines x-access-token-v2', () => {
+            const client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl, undefined, {encodedPrivateKey: encodedPrivateKey})
+
+            expect(client.createRequestOptions('/foo', {}, {foo: 'bar'}))
+              .to.eql({
+                url: 'https://microservice/foo',
+                headers: {
+                  'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.Ir9FvrSHfSyqJp-KmHoCnj8Z6HbpszC3PhhmB0Dq2oI',
+                  'x-access-token-v2': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.0w4kIowhP50x84G_4g1PU9ErpcJ1BBY4rUo5sOcyV3wjLviDKhwtPEZEmYgCGM28D00Xt8cWw9ImKDLhCL0CTWu_S1nodyQc1updMdgopWmgDLIfOJrImorx3GbO16o0sVSh3y8K-4ldj4TcUZ_b2RrJx1FZN5wBZ_alKDEihX-mKNpYZ4mpQH8bWVvX-86_JB_MnaCo2ZHyG3SNMQaTHUAQmhsH04K1ECG8_03wIXUWwfhbmqNyaiMlS0PKUubHFD8-6HoC4CQGO7ongmhXbOY_Jxsrkxgmcx9VhAtbAaBmGRJHkO8a5gL0gM2QuhuigIiinxpIOgvLSnCKoaStHA'
+                },
+                responseType: 'json',
+                json: {foo: 'bar'}
+              })
+          })
         })
       })
 
       describe('Without data', () => {
         it('returns an object without a JSON object assigned to the field `body`', () => {
           const client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
-          sinon.stub(client, 'generateAccessToken').returns('testAccessToken')
 
           expect(client.createRequestOptions('/foo', {}, {}))
             .to.eql({
               url: 'https://microservice/foo',
-              headers: {'x-access-token': 'testAccessToken'},
+              headers: {
+                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjQ0MTM2ZmEzNTViMzY3OGExMTQ2YWQxNmY3ZTg2NDllOTRmYjRmYzIxZmU3N2U4MzEwYzA2MGY2MWNhYWZmOGEiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.45aiVFL2v7ZFSoazhffWHNhnRQiDgdVXyGBbn1Se9LA',
+                'x-access-token-v2': undefined
+              },
               responseType: 'json',
               json: {}
             })
@@ -271,12 +342,14 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       describe('With data', () => {
         it('returns an object with a `searchParams` field', () => {
           const client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
-          sinon.stub(client, 'generateAccessToken').returns('testAccessToken')
 
           expect(client.createRequestOptions('/foo', {}, {foo: 'bar'}, true))
             .to.eql({
               url: 'https://microservice/foo',
-              headers: {'x-access-token': 'testAccessToken'},
+              headers: {
+                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.Ir9FvrSHfSyqJp-KmHoCnj8Z6HbpszC3PhhmB0Dq2oI',
+                'x-access-token-v2': undefined
+              },
               responseType: 'json',
               searchParams: {payload: 'eyJmb28iOiJiYXIifQ=='}
             })
@@ -286,12 +359,14 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       describe('Without data', () => {
         it('returns an object without a `searchParams` field', () => {
           const client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
-          sinon.stub(client, 'generateAccessToken').returns('testAccessToken')
 
           expect(client.createRequestOptions('/foo', {}, {}, true))
             .to.eql({
               url: 'https://microservice/foo',
-              headers: {'x-access-token': 'testAccessToken'},
+              headers: {
+                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjQ0MTM2ZmEzNTViMzY3OGExMTQ2YWQxNmY3ZTg2NDllOTRmYjRmYzIxZmU3N2U4MzEwYzA2MGY2MWNhYWZmOGEiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.45aiVFL2v7ZFSoazhffWHNhnRQiDgdVXyGBbn1Se9LA',
+                'x-access-token-v2': undefined
+              },
               responseType: 'json'
             })
         })
