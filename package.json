@@ -1,6 +1,6 @@
 {
   "name": "@ministryofjustice/fb-jwt-client-node",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "description": "Form Builder JSON Web Token Client (Node)",
   "main": "lib/fb-jwt-client.js",
   "scripts": {
