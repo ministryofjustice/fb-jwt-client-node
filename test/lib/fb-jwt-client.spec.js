@@ -179,7 +179,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     })
   })
 
-  describe('Injecting metrics instrumentation (setMetricsInstrumentation)', () => {
+  describe('Injecting metrics instrumentation (`setMetricsInstrumentation()`)', () => {
     let mockApiMetrics
     let mockRequestMetrics
     let client
@@ -198,7 +198,6 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     it('assigns the second argument to the field `requestMetrics`', () => expect(client.requestMetrics).to.equal(mockRequestMetrics))
   })
 
-  // Endpoint URLs
   describe('Creating the endpoint URLs', () => {
     it('creates the URLs', () => {
       const client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
@@ -374,7 +373,6 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     })
   })
 
-  // Sending gets
   describe('Getting', () => {
     let client
 
@@ -425,11 +423,10 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
 
       it('calls the correct url', () => expect(getGetStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
       it('adds the correct x-access-token header', () => expect(getGetStub.getCall(0).args[0].headers['x-access-token']).to.equal('testAccessToken'))
-      it('returns undefined', () => expect(returnValue).to.be.undefined)
+      it('returns an object', () => expect(returnValue).to.eql({}))
     })
   })
 
-  // Sending posts
   describe('Posting', () => {
     describe('With a payload', () => {
       let client
@@ -458,7 +455,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
 
       it('calls the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
       it('adds the x-access-token header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token']).to.equal('accessToken'))
-      it('returns JSON', () => expect(returnValue).to.eql({foo: 'bar'}))
+      it('returns an object', () => expect(returnValue).to.eql({foo: 'bar'}))
     })
 
     describe('Without a payload', () => {
@@ -487,7 +484,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
 
       it('calls the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
       it('adds the x-access-token header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token']).to.equal('accessToken'))
-      it('returns undefined', () => expect(returnValue).to.be.undefined)
+      it('returns an object', () => expect(returnValue).to.eql({}))
     })
   })
 
@@ -755,21 +752,19 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       })
 
       describe('Getting', async () => {
-        it('throws an ‘ENOERROR’', async () => {
-          try {
-            nock(microserviceUrl)
-              .get('/json-body')
-              .reply(201, {success: true})
+        it('returns an object', async () => {
+          nock(microserviceUrl)
+            .get('/json-body')
+            .reply(201, {success: true})
 
-            await client.send('get', {url: '/json-body'})
-          } catch (e) {
-            expect(e.name).to.equal('FBJWTClientError')
-          }
+          const response = await client.send('get', {url: '/json-body'})
+
+          expect(response).to.eql({success: true})
         })
       })
 
       describe('Posting', () => {
-        it('returns the JSON', async () => {
+        it('returns an object', async () => {
           nock(microserviceUrl)
             .post('/json-body')
             .reply(201, {success: true})
@@ -788,21 +783,19 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       })
 
       describe('Getting', () => {
-        it('throws an ‘ENOERROR’', async () => {
-          try {
-            nock(microserviceUrl)
-              .get('/empty-json-body')
-              .reply(201, {})
+        it('returns an object', async () => {
+          nock(microserviceUrl)
+            .get('/empty-json-body')
+            .reply(201, {})
 
-            await client.send('get', {url: '/empty-json-body'})
-          } catch (e) {
-            expect(e.name).to.equal('FBJWTClientError')
-          }
+          const response = await client.send('get', {url: '/empty-json-body'})
+
+          expect(response).to.eql({})
         })
       })
 
       describe('Posting', () => {
-        it('returns the JSON', async () => {
+        it('returns an object', async () => {
           nock(microserviceUrl)
             .post('/empty-json-body')
             .reply(201, {})
@@ -838,14 +831,16 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
         })
 
         describe('Posting', () => {
-          it('returns the response', async () => {
-            nock(microserviceUrl)
-              .post('/non-empty-body')
-              .reply(201, ' lorem ipsum ')
+          it('throws an ‘ENOERROR’', async () => {
+            try {
+              nock(microserviceUrl)
+                .post('/non-empty-body')
+                .reply(201, ' lorem ipsum ')
 
-            const response = await client.send('post', {url: '/non-empty-body'})
-
-            expect(response).to.equal(' lorem ipsum ')
+              await client.send('post', {url: '/non-empty-body'})
+            } catch (e) {
+              expect(e.name).to.equal('FBJWTClientError')
+            }
           })
         })
       })
@@ -866,14 +861,16 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
         })
 
         describe('Posting', () => {
-          it('returns the JSON', async () => {
-            nock(microserviceUrl)
-              .post('/spaces-body')
-              .reply(201, '    ')
+          it('throws an ‘ENOERROR’', async () => {
+            try {
+              nock(microserviceUrl)
+                .post('/spaces-body')
+                .reply(201, '    ')
 
-            const response = await client.send('post', {url: '/spaces-body'})
-
-            expect(response).to.eql({})
+              await client.send('post', {url: '/spaces-body'})
+            } catch (e) {
+              expect(e.name).to.equal('FBJWTClientError')
+            }
           })
         })
       })
@@ -886,21 +883,19 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       })
 
       describe('Getting', async () => {
-        it('throws an ‘ENOERROR’', async () => {
-          try {
-            nock(microserviceUrl)
-              .get('/empty-string-body')
-              .reply(201, '')
+        it('returns an object', async () => {
+          nock(microserviceUrl)
+            .get('/empty-string-body')
+            .reply(201, '')
 
-            await client.send('get', {url: '/empty-string-body'})
-          } catch (e) {
-            expect(e.name).to.equal('FBJWTClientError')
-          }
+          const response = await client.send('get', {url: '/empty-string-body'})
+
+          expect(response).to.eql({})
         })
       })
 
       describe('Posting', () => {
-        it('returns an empty JSON object', async () => {
+        it('returns an object', async () => {
           nock(microserviceUrl)
             .post('/empty-string-body')
             .reply(201, '')
@@ -919,22 +914,23 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
       client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
     })
 
+    /*
+     *  When the response is undefined expect an object (for now)
+     */
     describe('Getting', () => {
-      it('throws an ‘ENOERROR’', async () => {
-        try {
-          nock(microserviceUrl)
-            .get('/undefined-body')
-            .reply(201)
+      it('returns an object', async () => {
+        nock(microserviceUrl)
+          .get('/undefined-body')
+          .reply(201)
 
-          await client.send('get', {url: '/undefined-body'})
-        } catch (e) {
-          expect(e.name).to.equal('FBJWTClientError')
-        }
+        const response = await client.send('get', {url: '/undefined-body'})
+
+        expect(response).to.eql({})
       })
     })
 
     describe('Posting', () => {
-      it('returns the JSON', async () => {
+      it('returns an object', async () => {
         nock(microserviceUrl)
           .post('/undefined-body')
           .reply(201)
@@ -946,7 +942,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     })
   })
 
-  describe('`encrypt`', () => {
+  describe('`encrypt()`', () => {
     let client
     let mockData
     let JSONStub
@@ -981,7 +977,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     })
   })
 
-  describe('`decrypt`', () => {
+  describe('`decrypt()`', () => {
     describe('`JSON.parse()` throws an error', () => {
       let client
       let JSONStub
@@ -1063,7 +1059,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     })
   })
 
-  describe('`encryptUserIdAndToken`', () => {
+  describe('`encryptUserIdAndToken()`', () => {
     let client
     let encryptStub
 
@@ -1088,7 +1084,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     })
   })
 
-  describe('`decryptUserIdAndToken`', () => {
+  describe('`decryptUserIdAndToken()`', () => {
     let client
     let decryptStub
 
@@ -1564,7 +1560,7 @@ describe('~/fb-jwt-client-node/fb-jwt-client', () => {
     })
   })
 
-  describe('`throwRequestError()', () => {
+  describe('`throwRequestError()`', () => {
     let client
     beforeEach(() => {
       client = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
